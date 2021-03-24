@@ -5,7 +5,11 @@
 package it.polito.tdp.corsi;
 
 import java.net.URL;
+import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
+
+import it.polito.tdp.corsi.model.Corso;
 import it.polito.tdp.corsi.model.Model;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -47,12 +51,80 @@ public class FXMLController {
     @FXML
     void corsiPerPeriodo(ActionEvent event) {
     	
+    	txtRisultato.clear();
+    	/**
+    	 * faccio il controllo dell'input con try/catch per gestire eventuali eccezioni
+    	 */
+    	
+    	if(txtPeriodo.getText()==null) {
+    		txtRisultato.setText("DEVI INSERIRE UN NUMERO (1 o 2 ) PER IL PERIODO DIDATTICO");
+    		return;
+    	}
+    		
+    	String periodoStringa = txtPeriodo.getText();
+    	Integer periodo;
+    	try {
+    		periodo= Integer.parseInt(periodoStringa);
+    	} catch(NumberFormatException ne) {
+    		txtRisultato.setText("DEVI INSERIRE UN NUMERO (1 o 2 ) PER IL PERIODO DIDATTICO");
+    		return;
+    	}
+    	
+    	if(periodo <1 || periodo> 2) {
+    		txtRisultato.setText("DEVI INSERIRE UN NUMERO (1 o 2 ) PER IL PERIODO DIDATTICO");
+    		return;
+    		
+    	}
+    	List<Corso>corsi =this.model.getCorsiByPeriodo(periodo);
+    	for(Corso c: corsi) {
+    		txtRisultato.appendText(c.toString()+ "\n");
+    	}
+    	
     }
 
     @FXML
     void numeroStudenti(ActionEvent event) {
+
+    	txtRisultato.clear();
+    	/**
+    	 * faccio il controllo dell'input con try/catch per gestire eventuali eccezioni
+    	 */
+    	
+    	if(txtPeriodo.getText()==null) {
+    		txtRisultato.setText("DEVI INSERIRE UN NUMERO (1 o 2 ) PER IL PERIODO DIDATTICO");
+    		return;
+    	}
+    		
+    	String periodoStringa = txtPeriodo.getText();
+    	Integer periodo;
+    	try {
+    		periodo= Integer.parseInt(periodoStringa);
+    	} catch(NumberFormatException ne) {
+    		txtRisultato.setText("DEVI INSERIRE UN NUMERO (1 o 2 ) PER IL PERIODO DIDATTICO");
+    		return;
+    	}
+    	
+    	if(periodo <1 || periodo> 2) {
+    		txtRisultato.setText("DEVI INSERIRE UN NUMERO (1 o 2 ) PER IL PERIODO DIDATTICO");
+    		return;
+    		
+    	}
+    	
+    	/**
+    	 * qui è tutto corretto --> collego la lista/mapppa/string al metodo corrispondente nel model
+    	 */
+    	
+    	Map<Corso,Integer>corsiIscrizioni =this.model.getIscrittiByPeriodo(periodo);
+    	
+    	//scorro la mappa per keyset --> per chiave
+    	for(Corso c: corsiIscrizioni.keySet()) {
+    		txtRisultato.appendText(c.toString()); //NON SOSTITUISCE , E' DIVERSO DA SETTEXT
+    		Integer n= corsiIscrizioni.get(c);  //prendo il numero di iscritti dalla mappa
+    	txtRisultato.appendText("\t"+ n + "\n");  // \t serve per dare una tabulazione
+    	}
     	
     }
+    
 
     @FXML
     void stampaDivisione(ActionEvent event) {
